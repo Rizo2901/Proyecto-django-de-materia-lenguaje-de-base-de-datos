@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal de Noticias</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
+        header {
+            background-color: #d49113;
+            color: #fff;
+            padding: 10px 0;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        header nav {
+            display: flex;
+            justify-content: center;
+        }
+        header nav a {
+            color: #fff;
+            text-decoration: none;
+            padding: 10px 20px;
+            margin: 0 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+        .btn-custom {
+            background-color: #6b5834; 
+            color: #fff; 
+            border: none; 
+            border-radius: 5px; 
+            padding: 10px 20px; 
+            font-size: 16px; 
+            transition: background-color 0.3s ease; 
+        }
+        .btn-custom:hover {
+            background-color: #b37d0a;
+        }
+        header nav a:hover {
+            background-color: #555;
+        }
+        .navbar {
+            background-color: transparent;
+            padding: 0;
+        }
+        .navbar-nav {
+            margin-left: auto;
+            margin-right: auto;
+            text-align: center;
+        }
+        .navbar-nav .nav-item {
+            margin-left: 0;
+            margin-right: 0;
+        }
+        .navbar-toggler {
+            border: none;
+        }
+        .navbar-toggler-icon {
+            background-image: none;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+        }
+        .login-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .login-container input[type="text"],
+        .login-container input[type="password"],
+        .login-container input[type="submit"] {
+            padding: 10px;
+            margin: 5px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            width: 200px;
+            box-sizing: border-box;
+        }
+        .login-container input[type="submit"] {
+            background-color: #333;
+            color: #fff;
+            cursor: pointer;
+        }
+        .login-container input[type="submit"]:hover {
+            background-color: #555;
+        }
+        h1, h2, h3 {
+            color: #333;
+        }
+        p {
+            line-height: 1.6;
+        }
+        .tema-item {
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #ccc;
+        }
+        .tema-item h2 {
+            font-size: 1.5em;
+            margin-bottom: 5px;
+        }
+        .tema-item p {
+            color: #666;
+        }
+        .tema-item .meta {
+            font-size: 0.8em;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Portal de Noticias</h1>
+        <nav class="navbar navbar-expand-lg navbar-light">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="{% url 'noticias' %}">Portal</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'autores' %}">Autores</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'usuarios' %}">Usuarios</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'noticias' %}">Noticias</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'temas' %}">Temas</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'subtemas' %}">Subtemas</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container">
+        <!-- Botón para agregar un nuevo tema -->
+        <button type="button" class="btn btn-custom mb-3" data-bs-toggle="modal" data-bs-target="#addModal">
+            Agregar Tema
+        </button>
+
+        <!-- Mostrar temas -->
+        {% for tema in temas %}
+        <div class="tema-item">
+            <h2>{{ tema.nombre }}</h2>
+         
+            <!-- Botón para editar -->
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editTemaModal" data-id="{{ tema.id_tema }}" data-nombre="{{ tema.nombre }}">
+                Editar
+            </button>
+             <!-- Botón para eliminar -->
+            <form action="{% url 'temas' %}" method="post" style="display:inline;">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="delete">
+                <input type="hidden" name="id_tema" value="{{ tema.id_tema }}">
+                <button type="submit" class="btn btn-danger">Eliminar</button>
+            </form>
+        </div>
+        {% empty %}
+        <p>No hay temas disponibles.</p>
+        {% endfor %}
+
+        <!-- Formulario para agregar un tema -->
+        <div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addModalLabel">Agregar Tema</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form action="{% url 'temas' %}" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="add">
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label for="add_nombre" class="form-label">Nombre</label>
+                                <input type="text" class="form-control" id="add_nombre" name="nombre" required>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-primary">Agregar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Formulario para editar un tema -->
+        <div class="modal fade" id="editTemaModal" tabindex="-1" aria-labelledby="editTemaModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editTemaModalLabel">Editar Tema</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form action="{% url 'temas' %}" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="edit">
+                        <input type="hidden" name="id_tema" id="edit_id_tema">
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label for="edit_nombre" class="form-label">Nombre</label>
+                                <input type="text" class="form-control" id="edit_nombre" name="nombre" required>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-primary">Guardar cambios</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var editTemaModal = document.getElementById('editTemaModal');
+            editTemaModal.addEventListener('show.bs.modal', function (event) {
+                var button = event.relatedTarget;
+                var idTema = button.getAttribute('data-id');
+                var nombre = button.getAttribute('data-nombre');
+
+                var modalTitle = editTemaModal.querySelector('.modal-title');
+                var inputIdTema = editTemaModal.querySelector('#edit_id_tema');
+                var inputNombre = editTemaModal.querySelector('#edit_nombre');
+
+                modalTitle.textContent = 'Editar Tema';
+                inputIdTema.value = idTema;
+                inputNombre.value = nombre;
+            });
+        });
+    </script>
+</body>
+</html>
